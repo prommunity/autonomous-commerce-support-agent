@@ -1,0 +1,234 @@
+{
+  "ticketId": "TCK-01",
+  "status": "resolved",
+  "steps": 5,
+  "actions": [
+    {
+      "action": {
+        "tool": "get_order",
+        "args": {},
+        "reason": "Need verified order context before taking action."
+      },
+      "result": {
+        "ok": true,
+        "summary": "Loaded order ORD-1001.",
+        "data": {
+          "order": {
+            "id": "ORD-1001",
+            "customerId": "CUS-01",
+            "totalUsd": 48,
+            "status": "shipped",
+            "promisedDate": "2026-09-18T17:00:00Z",
+            "carrier": "UPS",
+            "trackingNumber": "1Z-DEMO-1001",
+            "artworkStatus": "approved"
+          }
+        }
+      }
+    },
+    {
+      "action": {
+        "tool": "classify_ticket",
+        "args": {},
+        "reason": "Need to identify the support workflow."
+      },
+      "result": {
+        "ok": true,
+        "summary": "Classified ticket as shipping_delay.",
+        "data": {
+          "kind": "shipping_delay"
+        }
+      }
+    },
+    {
+      "action": {
+        "tool": "check_shipping",
+        "args": {},
+        "reason": "Verify whether the shipment is actually late."
+      },
+      "result": {
+        "ok": true,
+        "summary": "Shipment is past the promised date.",
+        "data": {
+          "late": true,
+          "carrier": "UPS",
+          "trackingNumber": "1Z-DEMO-1001"
+        }
+      }
+    },
+    {
+      "action": {
+        "tool": "issue_credit",
+        "args": {
+          "amountUsd": 10,
+          "reason": "Late shipment service recovery"
+        },
+        "reason": "A small bounded credit is allowed for a verified delay."
+      },
+      "result": {
+        "ok": true,
+        "summary": "Issued $10.00 account credit."
+      }
+    },
+    {
+      "action": {
+        "tool": "send_customer_reply",
+        "args": {
+          "message": "Thanks for reaching out about order ORD-1001. I confirmed the shipment is delayed. I added a $10 account credit for the inconvenience. Your tracking number is 1Z-DEMO-1001."
+        },
+        "reason": "The issue is resolved and the customer should receive a concise status update."
+      },
+      "result": {
+        "ok": true,
+        "summary": "Customer reply sent.",
+        "data": {
+          "message": "Thanks for reaching out about order ORD-1001. I confirmed the shipment is delayed. I added a $10 account credit for the inconvenience. Your tracking number is 1Z-DEMO-1001."
+        }
+      }
+    }
+  ],
+  "customerReply": "Thanks for reaching out about order ORD-1001. I confirmed the shipment is delayed. I added a $10 account credit for the inconvenience. Your tracking number is 1Z-DEMO-1001.",
+  "estimatedHumanMinutesSaved": 6
+}
+{
+  "ticketId": "TCK-02",
+  "status": "escalated",
+  "steps": 4,
+  "actions": [
+    {
+      "action": {
+        "tool": "get_order",
+        "args": {},
+        "reason": "Need verified order context before taking action."
+      },
+      "result": {
+        "ok": true,
+        "summary": "Loaded order ORD-1002.",
+        "data": {
+          "order": {
+            "id": "ORD-1002",
+            "customerId": "CUS-02",
+            "totalUsd": 92,
+            "status": "processing",
+            "promisedDate": "2026-09-25T17:00:00Z",
+            "artworkStatus": "needs_review"
+          }
+        }
+      }
+    },
+    {
+      "action": {
+        "tool": "classify_ticket",
+        "args": {},
+        "reason": "Need to identify the support workflow."
+      },
+      "result": {
+        "ok": true,
+        "summary": "Classified ticket as artwork_issue.",
+        "data": {
+          "kind": "artwork_issue"
+        }
+      }
+    },
+    {
+      "action": {
+        "tool": "check_artwork",
+        "args": {},
+        "reason": "Check the current artwork review state."
+      },
+      "result": {
+        "ok": true,
+        "summary": "Artwork status is needs_review.",
+        "data": {
+          "artworkStatus": "needs_review"
+        }
+      }
+    },
+    {
+      "action": {
+        "tool": "escalate",
+        "args": {
+          "reason": "Artwork requires specialist review before production."
+        },
+        "reason": "Visual production decisions are intentionally kept human-in-the-loop."
+      },
+      "result": {
+        "ok": true,
+        "summary": "Ticket escalated to a human.",
+        "data": {
+          "reason": "Artwork requires specialist review before production."
+        }
+      }
+    }
+  ],
+  "escalationReason": "Artwork requires specialist review before production.",
+  "estimatedHumanMinutesSaved": 2
+}
+{
+  "ticketId": "TCK-03",
+  "status": "escalated",
+  "steps": 3,
+  "actions": [
+    {
+      "action": {
+        "tool": "get_order",
+        "args": {},
+        "reason": "Need verified order context before taking action."
+      },
+      "result": {
+        "ok": true,
+        "summary": "Loaded order ORD-1003.",
+        "data": {
+          "order": {
+            "id": "ORD-1003",
+            "customerId": "CUS-03",
+            "totalUsd": 420,
+            "status": "processing",
+            "promisedDate": "2026-09-26T17:00:00Z",
+            "artworkStatus": "approved"
+          }
+        }
+      }
+    },
+    {
+      "action": {
+        "tool": "classify_ticket",
+        "args": {},
+        "reason": "Need to identify the support workflow."
+      },
+      "result": {
+        "ok": true,
+        "summary": "Classified ticket as refund_request.",
+        "data": {
+          "kind": "refund_request"
+        }
+      }
+    },
+    {
+      "action": {
+        "tool": "escalate",
+        "args": {
+          "reason": "High-value order requires human review."
+        },
+        "reason": "Policy prevents autonomous resolution for high-value orders."
+      },
+      "result": {
+        "ok": true,
+        "summary": "Ticket escalated to a human.",
+        "data": {
+          "reason": "High-value order requires human review."
+        }
+      }
+    }
+  ],
+  "escalationReason": "High-value order requires human review.",
+  "estimatedHumanMinutesSaved": 2
+}
+
+=== Portfolio demo metrics ===
+{
+  "tickets": 3,
+  "resolved": 1,
+  "escalated": 2,
+  "creditsIssuedUsd": 10
+}

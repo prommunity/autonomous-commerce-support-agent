@@ -1,0 +1,15 @@
+{
+  "name": "autonomous-commerce-support-agent",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A measurable autonomous support agent portfolio project for commerce operations.",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "demo": "npm run build && node dist/demo.js",
+    "test": "npm run build && node dist/tests.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
